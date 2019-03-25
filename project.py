@@ -15,8 +15,10 @@ def shunt(infix):
     operatorStack = ''
     #stores all characters in the proper postfix notation 
     postfix = '' 
-    #A dictionary that gives all the symbols into an order of precedence 
-    specialSymbols ={'*':50, '+':40, '.':30, '|':20}
+    #A dictionary that gives all the symbols into an order of precedence
+    #Set up as left to right association meaning if two symbols of the same precedence meet on the stack
+    #the symbol currently on the stack is popped first   
+    specialSymbols ={'*':50, '+':40, '-':40, '.':30, '|':20}
 
     #for loop that continues for the lenght of the string input
     for i in infix:
@@ -53,5 +55,9 @@ def shunt(infix):
         operatorStack= operatorStack[:-1]
     return postfix
 
+#testing that the algorithm works correctly
 print(shunt('A*B+C'))
+print(shunt('A+B*C'))
+print(shunt('A*(B+C)'))
 
+print(shunt('A-B+C'))
