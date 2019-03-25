@@ -30,18 +30,16 @@ def shunt(infix):
             #checks to see if the last item on the stack is a '('
             while operatorStack[-1] != '(':
                 #adds the last symbol to the postfix string i.e. the symbol before the ')'
-                postfix = postfix + operatorStack[-1]
-                 #sets the stack equal to the second last charatcer of the String
-                operatorStack = operatorStack[:-1]
+                #sets the stack equal to the second last charatcer of the String
+                postfix, operatorStack = postfix + operatorStack[-1],  operatorStack[:-1]
             #This line deletes the '(' from the stack
             operatorStack = operatorStack[:-1]
         #handles any of the symbols that appear in the dictionary above
         elif i in specialSymbols:
-            #I DONT FULLY KNOW THIS YET
+            ##NEED COMMENT HERE 
             while operatorStack and specialSymbols.get(i, 0) <= specialSymbols.get(operatorStack[-1],0):
-                postfix= postfix + operatorStack[-1]
-                operatorStack = operatorStack[:-1]
-            #adds new specials symbols read in onto the operator stack
+                #adds new specials symbols read in onto the operator stack
+                postfix, operatorStack = postfix + operatorStack[-1], operatorStack[:-1]
             operatorStack = operatorStack + i    
         #else handles all normal characters 1,0 a-z, A-Z 
         else:
@@ -50,9 +48,8 @@ def shunt(infix):
     #The while loop is used to empty the operator stack into the postfix string
     while operatorStack:
         #adds the last symbol on the operator stack to the postfix string
-        postfix = postfix + operatorStack[-1]
+        postfix, operatorStack = postfix + operatorStack[-1], operatorStack[:-1]
         #sets the operator stack equal to the second last item
-        operatorStack= operatorStack[:-1]
     return postfix
 
 #testing that the algorithm works correctly
