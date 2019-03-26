@@ -6,7 +6,7 @@
 # And use that NFA to recognise any string of text
 
 # Infix => Postfix Notation 
-# The reason for doing this is that Computers have an easier time reading Postifx notations of strings
+# The reason for doing this is that Computers have an easier time reading Postfix notations of strings
 # because they can do it in one left to right read
 
 def shunt(infix):
@@ -59,6 +59,7 @@ print(shunt('A*B+C'))
 print(shunt('A+B*C'))
 print(shunt('A*(B+C)'))
 print(shunt('A-B+C'))
+print(shunt('A|B.C'))
 
 # This class is used to repsent the NFA's that will be used in this program
 # NFA's are made up of states
@@ -75,11 +76,70 @@ class state:
     edge1 = None
     edge2 = None
     
-    #C onstructor for the NFA class
+    # Constructor for the NFA class
     # self references the current instance of the class
     # self has to be called first and is not needed to create an instance of the class
-    def __init__(self, initial, accept):
+    def __init__(self, initial, final):
         self.initial=initial
         self.final=final
+
+def compile(postfix):
+        """A function which creates NFA's from postfix Regular Expression created by the shunt function"""
+        # Stack for holding NFA's
+        nfaStack = []
+        # for loop is used to create NFA fragments for non special characters
+        for p in postfix:
+            if p == '*':
+                # pop only one NFA off the stack for '*' operator
+                nfa = nfaStack.pop()
+                # create new initial and final state
+                initial, final = state(), state()
+                # connect the initial state to the new initial state using edge1 and
+                # connect the new initial state new final state using edge2
+                initial.edge1, initial.edge2 = nfa.initial, final
+                # connect the old final state to the new final state and
+                # connect the new final to the new initial state
+                nfa.final.edge1, nfa.final.edge2 = nfa.initial, final
+                # create and push the new '*' NFA to the nfaStack using the newly made initial and final states
+                newNFA = NFA(initial, final)
+                nfaStack.append(newNFA)
+            elif p == '.': 
+                # stacks are LIFO so you pop the last item off the stack first nfa2 first than nfa1
+                nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
+                # combine the two states together by setting the edge1 of the nfa1 final state to
+                # the nfa2's initial state
+                nfa1.final.edge1 = nfa2.initial
+                # create a new NFA using the nfa1.initial and nfa2.final
+                 # push the new nfa onto the stack which is a concatonation of both the stack
+                newNFA = NFA(nfa1.initial, nfa2.final)   
+                nfaStack.append(newNFA)
+            elif p == '|':
+                # it doesn't matter what order the NFAs are popped off the stack for the '|' operator
+                nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
+                # create new initial and final
+                initial, final = state(), state()
+                # connect the new initial state to the initial states of nfa1 and nfa2 
+                initial.edge1, initial.edge2 = nfa1.initial, nfa2.initial
+                # connect the final state of nfa1 and nfa2 to the new final state
+                nfa1.final.edge1, nfa2.final.edge1 = final, final
+                # both NFAs now have a new initial and final state
+                # create a new NFA with the initial and final state and push it to the stack
+                newNFA = NFA(initial, final)
+                nfaStack.append(newNFA)
+            else: 
+                # else is used for handling all non special symbols
+                # create a new initial and final state
+                initial, final = state(), state()
+                # set the label of the state equal to the character entered
+                initial.label = p
+                # connect the new initial state to the new final state
+                initial.edge1 = final
+                # edge2 is not needed for the initial state
+                # create a new NFA and an push it onto the stack
+                newNFA = NFA(initial, final)
+                nfaStack.append(newNFA)
+            return nfaStack.pop()
+
+
 
 
