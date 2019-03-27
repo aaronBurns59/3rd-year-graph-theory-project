@@ -103,6 +103,23 @@ def compile(postfix):
                 # create and push the new '*' NFA to the nfaStack using the newly made initial and final states
                 newNFA = NFA(initial, final)
                 nfaStack.append(newNFA)
+
+            #elif p == '?'
+            elif p == '+':
+                # pop only one NFA off the stack for '+' operator
+                nfa = nfaStack.pop()
+                # create new initial and final state
+                initial, final = state(), state()
+                # connect the initial state to the new initial state using edge1 and
+                # DO NOT CONNECT the new initial state edge2 to the new final state because the + operator does not except the empty set
+                initial.edge1 = nfa.initial
+                # connect the old final state to the new final state and
+                # connect the new final to the new initial state
+                nfa.final.edge1, nfa.final.edge2 = nfa.initial, final
+                # create and push the new '*' NFA to the nfaStack using the newly made initial and final states
+                newNFA = NFA(initial, final)
+                nfaStack.append(newNFA)
+
             elif p == '.': 
                 # stacks are LIFO so you pop the last item off the stack first nfa2 first than nfa1
                 nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
@@ -139,7 +156,3 @@ def compile(postfix):
                 newNFA = NFA(initial, final)
                 nfaStack.append(newNFA)
             return nfaStack.pop()
-
-
-
-

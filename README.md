@@ -21,7 +21,13 @@ The else deals with any characters that are not brackets or operators. Symbols t
  At the end of the shunt function there is a while loop that empties the operatorStack in case there are any symbols left on it and it returns the postfix string that was converted from infix.
 
 
- Creating NFA's from the postfix RE (Thompson's Construction)
-=============================================================
+ Creating NFA's from the postfix Regular Expressions (Thompson's Construction)
+==============================================================================
 
 Two classes are used to represent the NFA's and the states that make up those NFA's.  The NFA class has a constructor io initialise its properties.  The state class has three variables one for the label of the state and two for the edges. The edges will be used later on the connect the states in the NFA
+
+A function called compile is used to turn the postfix regular expressions created in the shunt function, into NFAs. It declares a stack for the nfas and than a series of if/elif/else statements to handle the special symbols used in 'Thompson's Construction'
+
+The if statement is entered when the symbol in the posftix string is a * operator. The * NFA needs two new states, a new initial and final state. The new initial state needs to connect to the old initial state and the new final state. The old final state needs to connect to the new final state and the old intial state. This is done in the code by connecting the new initial state's edge1 to the old initial state and its edge2 to the new final state.  Only one NFA needs to be popped off the stack because the * operator in regular expressions means one or more instances are accepted.
+
+The first elif statement is entered when when the symbol in the postfix string is a * operator. The + operator is almost identical to the * operator except the new initial state is not connected to the new final state. The + operator NFA means one or more of an instance is accepted, removing the connection ensures that the empty set is not accepted
