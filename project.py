@@ -19,7 +19,7 @@ def shunt(infix):
     # A dictionary that gives all the symbols into an order of precedence
     # Set up as left to right association meaning if two symbols of the same precedence meet on the stack
     # the symbol currently on the stack is popped first   
-    specialSymbols ={'*':50, '+':40, '-':40, '.':30, '|':20}
+    specialSymbols ={'*':50, '+':40,  '.':30, '|':20}
 
     # for loop that continues for the lenght of the string input
     for i in infix:
@@ -147,6 +147,7 @@ def compile(postfix):
             # create a new NFA and an push it onto the stack
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
+    # pop only one state of the stack because when it is called later only one nfa will be assigned to it
     return nfaStack.pop()
 
 def followEdges(state):
@@ -154,9 +155,9 @@ def followEdges(state):
     # create a new set with a state as its only elements
     states = set()
     states.add(state)
-    # checks if the states label ...........
+    # checks if the states label is a special symbol
     if state.label is None:
-        # checks if edge1 is a state 
+        # checks if edge1 is pointed to a state 
         if state.edge1 is not None:
             # if there is an edge1 follow it using the Union:|= operator
             # |= is the same as var = var + 1 in other languages
@@ -208,7 +209,6 @@ print(shunt('A|B.C'))
 
 # tuple is used to store pair values for testing both infix regular expressions and sample strings
 testTuple = [
-    ('a.b.c', ''),s
     ('a.b.c', ''),
     ('a+', ''),
     ('a*', ''),
