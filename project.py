@@ -54,18 +54,17 @@ def shunt(infix):
         # sets the operator stack equal to the second last item
     return postfix
 
-# testing that the algorithm works correctly
-print(shunt('A*B+C'))
-print(shunt('A+B*C'))
-print(shunt('A*(B+C)'))
-print(shunt('A-B+C'))
-print(shunt('A|B.C'))
-
 # This class is used to repsent the NFA's that will be used in this program
 # NFA's are made up of states
 class NFA:
     initial = None
     final = None
+    # Constructor for the NFA class
+    # self references the current instance of the class
+    # self has to be called first and is not needed to create an instance of the class
+    def __init__(self, initial, final):
+        self.initial=initial
+        self.final=final
 
 # this class used to represent a state in an NFA that is used in Thompson's construction
 # States in Thompson's Construction can't have more than 2 edges 
@@ -75,13 +74,6 @@ class state:
     label = None
     edge1 = None
     edge2 = None
-    
-    # Constructor for the NFA class
-    # self references the current instance of the class
-    # self has to be called first and is not needed to create an instance of the class
-    def __init__(self, initial, final):
-        self.initial=initial
-        self.final=final
 
 def compile(postfix):
     """Creates NFA's from the postfix Regular Expression created by the shunt function"""
@@ -120,7 +112,6 @@ def compile(postfix):
             # create and push the new '*' NFA to the nfaStack using the newly made initial and final states
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-
         elif p == '.': 
             # stacks are LIFO so you pop the last item off the stack first nfa2 first than nfa1
             nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
@@ -131,7 +122,6 @@ def compile(postfix):
                 # push the new nfa onto the stack which is a concatonation of both the stack
             newNFA = NFA(nfa1.initial, nfa2.final)   
             nfaStack.append(newNFA)
-
         elif p == '|':
             # it doesn't matter what order the NFAs are popped off the stack for the '|' operator
             nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
@@ -145,7 +135,6 @@ def compile(postfix):
             # create a new NFA with the initial and final state and push it to the stack
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-
         else: 
             # else is used for handling all non special symbols
             # create a new initial and final state
@@ -158,7 +147,7 @@ def compile(postfix):
             # create a new NFA and an push it onto the stack
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-        return nfaStack.pop()
+    return nfaStack.pop()
 
 def followEdges(state):
     """Returns the set of states that can be reached from a given state following its edge arrows"""
@@ -167,13 +156,67 @@ def followEdges(state):
     states.add(state)
     # checks if the states label ...........
     if state.label is None:
-        #checks if edge1 is a state 
+        # checks if edge1 is a state 
         if state.edge1 is not None:
-            #if there is an edge1 follow it using the Union:|= operator
-            #Recursively call the the method to check the states edge1 
+            # if there is an edge1 follow it using the Union:|= operator
+            # |= is the same as var = var + 1 in other languages
+            # Recursively call the the method to check the states edge1 
             states |= followEdges(state.edge1)            
         if state.edge2 is not None:
-            #if there is an edge1 follow it using the Union:|= operator
-            #Recursively call the the method to check the states edge1
+            # if there is an edge1 follow it using the Union:|= operator
+            # Recursively call the the method to check the states edge1
             states |= followEdges(state.edge2)
     return states
+
+def match(infix, string):
+    """Matches a sample output string to infix regular expressions(After they are converted to postfix)"""
+    # call the shunt funciton on the infix string that is passed in
+    postfix = shunt(infix)
+    # call the compile function on the postfix string that was created above to create and NFA for each symbol in the postfix string
+    nfa = compile(postfix)
+    # a new set that only allows one copy of a state into it (as sets do)
+    currentSet = set()
+    # a new set to hold the next states
+    nextSet = set()
+    # call the followEdges method and set the currentSet of states equal to the states that the new NFAs intial state can reach
+    currentSet |= followEdges(nfa.initial)
+    # loop through each character of the string
+    for s in string:
+        # loop through the current set of states
+        for c in currentSet:
+            # check if the state has the same label as the character in the string 
+            if c.label == s:
+                # add the edge1 state to the next set including all the states that are reachable by the edge arrows
+                # nextSet = nextSet + followEdges(c.edge1)
+                nextSet |= followEdges(c.edge1)
+        # set the currentSet equal to the nextSet
+        currentSet = nextSet
+        # clear the nextSet by redeclaring it
+        nextSet = set()
+    # check if the accept state is in the currentSet
+    return (nfa.final in currentSet)
+
+# Testing the code
+
+# testing that the algorithm works correctly
+print('Test for the shunting yard function')
+print(shunt('A*B+C'))
+print(shunt('A+B*C'))
+print(shunt('A*(B+C)'))
+print(shunt('A-B+C'))
+print(shunt('A|B.C'))
+
+# tuple is used to store pair values for testing both infix regular expressions and sample strings
+testTuple = [
+    ('a.b.c', ''),s
+    ('a.b.c', ''),
+    ('a+', ''),
+    ('a*', ''),
+    ('a.(b|d).c', 'abc'),
+    ('(a.(b|d))', 'abbc'),
+    ('a.(b.b)*.c', 'abbbc')
+]
+# for loop used to test data in the tuple
+print('Test for the match/compile/followEdges functions')
+for exp, res in testTuple: 
+    print(match(exp, res), exp, res)

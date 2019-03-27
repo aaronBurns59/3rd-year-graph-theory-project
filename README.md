@@ -37,3 +37,10 @@ The second elif statement is entered when the symbol in the postfix string is a 
 The third elif statement is entered when the symbol in the postfix string is a | operator. The | operator needs two states popped off the nfaStack. It also needs a new initial and final state. Connect the new initial state to the initial states of the two NFAs that were popped off the stack And connect the two NFAs final states to the newly created final state. Create a new NFA using the newly created initial and final state. Append the new NFA onto the stack
 
 The else statement is entered when no special characters are incountered, all non special symbols have the same NFA. Non special symbol's NFAs need a initial and a final state and nothing is popped off the stack. Non special NFAs have the state label set to whatever character is currently being read in the postfix e.g.'a', 'b', '0', '1'. The initial state's edge1 is connected to the newly created final state. A new NFA is created using the initial and final and is then appended onto the stack.
+
+
+Following edges of state to determine the states that can be reached by a given state
+=====================================================================================
+
+Matching sets of states NFAs to determine if they are the same
+=====================================================================================
