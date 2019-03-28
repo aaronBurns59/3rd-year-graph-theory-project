@@ -49,7 +49,6 @@ Matching sets of states NFAs to determine if they are the same
 The match function takes in two parameters both of which are strings. One to represent an infix regular expression and another to represent a sample answer that it will be expected to either match or not. The shunt function is called on the infix string and is assigned to a new string called postfix which is then passed into the compile function which is assigned to an NFA variable. Two sets are declared one to reprsent the current states and another to represent the states that the current state is connected to via its edges. Then states that are connected to the NFAs initial state are added to the currentSet. A for loop is used to cycle through the sample string that was passed into the function and an inner for loop cycles through the currentSet. The characters of the string symbol is then compared to the label of the state in the currentSet. If the characters match than states that the current state ic connected to are added to the nextSet. After the end of the inner for loop the currentSet is set equal to the nextSet and the nextSet is reinitialised(emptied). After the sample string has been read the final NFA in the currentSet is returned, this is to check if the final state of the NFA is in the currentSet. If it is than the sample string matches the infix regular expression.
 
 
-
 Test the shunt function
 =======================
 This test is very simple. it calls the shunt function and gives some sample infix regular expressions as parameters it than returns those to the console so they can be verified as postfix strings after the **shunting yard algorithm** has been used on them by the shunt function. 
@@ -61,3 +60,7 @@ The tests written for each of the operators take in as few non special character
 Testing more complex RE used in graph theory
 ===========================================
 This is very much the same as the above test except the infix REs that are given are more complex
+
+Test using command prompt
+=========================
+After using static test values before I decided to change to a command prompt from the user. The user will be prompted to enter an infix RE and string they want to match that with.  The program will then call the match function on both strings and returns if the string will be accepted by the RE. All this is inside a while True loop, so it will reprompt the user for more input making it easier to test new test cases instead of having to set them up before hand. The previous tests have not been deleted as they are useful for testing multiple REs and strings together 
