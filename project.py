@@ -231,34 +231,56 @@ def match(infix, string):
 
 # TESTING ==============================================================================================
 # tuple is used to store pair values for '*' operator
-testTuple1 = [
+testTuple = [
     ('a*', ''),# pass
     ('a*', 'a'),# pass
     ('a*', 'aaaa')# pass
 ]
 # for loop used to test data in the '*' tuple
 print('Test "*" operator')
-for exp, res in testTuple1: 
+for exp, res in testTuple: 
     print(match(exp, res), exp, res)
 
 # tuple is used to store pair values for '+' operator
-testTuple2 = [
+testTuple = [
     ('a+a', ''),# fail
     ('a+a', 'a'),# pass
     ('a+a', 'aaaa')# pass
 ]
 # for loop used to test data in the '+' tuple
 print('Test "+" operator')
-for exp, res in testTuple2: 
+for exp, res in testTuple: 
     print(match(exp, res), exp, res)
 
-    # tuple is used to store pair values for '+' operator
-testTuple3 = [
+# tuple is used to store pair values for '?' operator
+testTuple = [
     ('a?', ''),# pass
     ('a?', 'a'),# pass
     ('a?', 'aaaa')# fail
 ]
-# for loop used to test data in the '+' tuple
-print('Test "+" operator')
-for exp, res in testTuple3: 
+# for loop used to test data in the '?' tuple
+print('Test "?" operator')
+for exp, res in testTuple: 
+    print(match(exp, res), exp, res)
+
+# tuple is used to store pair values for '|' operator
+testTuple = [
+    ('a|b', 'a'),# pass
+    ('a|b', 'aa'),# fail
+    ('a|b', 'b')# pass
+]
+# for loop used to test data in the '|' tuple
+print('Test "|" operator')
+for exp, res in testTuple: 
+    print(match(exp, res), exp, res)
+
+# tuple is used to store pair values for '.' operator
+testTuple = [
+    ('a.b', 'a'),# fail
+    ('a.b', 'ab'),# pass
+    ('a.b', 'aa')# fail
+]
+# for loop used to test data in the '.' tuple
+print('Test "." operator')
+for exp, res in testTuple: 
     print(match(exp, res), exp, res)
