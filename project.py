@@ -221,15 +221,14 @@ def match(infix, string):
     # check if the accept state is in the currentSet
     return (nfa.final in currentSet)
 
-# testing that the algorithm works correctly
-# print('Test for the shunting yard function')
-# print(shunt('A*B+C'))
-# print(shunt('A+B*C'))
-# print(shunt('A*(B+C)'))
-# print(shunt('A-B+C'))
-# print(shunt('A|B.C'))
+# testing that the shunting algorithm works correctly
+print('Test for the shunting yard function')
+print(shunt('A*B+C'))
+print(shunt('A+B*C'))
+print(shunt('A*(B+C)'))
+print(shunt('A-B+C'))
+print(shunt('A|B.C'))
 
-# TESTING ==============================================================================================
 # tuple is used to store pair values for '*' operator
 testTuple = [
     ('a*', ''),# pass
@@ -282,5 +281,25 @@ testTuple = [
 ]
 # for loop used to test data in the '.' tuple
 print('Test "." operator')
+for exp, res in testTuple: 
+    print(match(exp, res), exp, res)
+
+# tuple is used to store pair values for testing infix RE and sample strings
+testTuple = [
+    ('a.b.c', 'abc'), # pass
+    ('a.b.c', ''), # fail
+    ('a.b.c', 'cba'), # fail
+    
+    ('a.(b|d).c', 'abc'),# pass
+    ('a.(b|d).c', 'adc'),# pass
+    ('a.(b|d).c', 'abdc'),# fail
+    ('a.(b|d).c', ''),# fail
+    # accepts an even number of a's including none
+    ('(a.a)*', 'aaaa'),# pass
+    ('(a.a)*', ''),# pass
+    ('(a.a)*', 'a'),# fail
+    ('(a.a)*', 'aaa')# pass
+]
+# # for loop used to test data in the '.' tuple
 for exp, res in testTuple: 
     print(match(exp, res), exp, res)
