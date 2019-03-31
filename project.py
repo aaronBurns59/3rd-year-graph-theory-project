@@ -214,9 +214,9 @@ def match(infix, string):
                 # add the edge1 state to the next set including all the states that are reachable by the edge arrows
                 # nextSet = nextSet + followEdges(c.edge1)
                 nextSet |= followEdges(c.edge1)
-        # set the currentSet equal to the nextSet
+        # The currentSet of states is replaced by nextSet
         currentSet = nextSet
-        # clear the nextSet by redeclaring it
+        # the nextSet is emptied
         nextSet = set()
     # check if the accept state is in the currentSet
     return (nfa.final in currentSet)
@@ -242,9 +242,9 @@ def match(infix, string):
 
 # # tuple is used to store pair values for '+' operator
 # testTuple = [
-#     ('a+a', ''),# fail
-#     ('a+a', 'a'),# pass
-#     ('a+a', 'aaaa')# pass
+#     ('a+', ''),# fail
+#     ('a+', 'a'),# pass
+#     ('a+', 'aaaa')# pass
 # ]
 # # for loop used to test data in the '+' tuple
 # print('Test "+" operator')
