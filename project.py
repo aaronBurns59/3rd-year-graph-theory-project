@@ -3,7 +3,7 @@
 # A program which converts infix to postfix
 # Builds NFA's from regular expressions
 # Uses the single NFA's for each character to build larger NFA's
-# And use that NFA to recognise any string of text
+# And use that NFA to recognise strings of text
 
 # needed for reading input from the console
 import sys
@@ -99,7 +99,6 @@ def compile(postfix):
             # create and push the new '*' NFA to the nfaStack using the newly made initial and final states
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-
         elif p == '+':
             # pop only one NFA off the stack for '+' operator
             nfa = nfaStack.pop()
@@ -114,7 +113,6 @@ def compile(postfix):
             # create and push the new '*' NFA to the nfaStack
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-
         elif p == '?':
             # pop only one NFA off the stack for the '?' operator
             nfa = nfaStack.pop()
@@ -127,8 +125,7 @@ def compile(postfix):
             nfa.final.edge1 = final
             #create and push a new '?' NFA to the nfaStack
             newNFA = NFA(initial, final)
-            nfaStack.append(newNFA)
-            
+            nfaStack.append(newNFA)           
         elif p == '.': 
             # stacks are LIFO so you pop the last item off the stack first nfa2 first than nfa1
             nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
@@ -139,7 +136,6 @@ def compile(postfix):
                 # push the new nfa onto the stack which is a concatonation of both the stack
             newNFA = NFA(nfa1.initial, nfa2.final)   
             nfaStack.append(newNFA)
-
         elif p == '|':
             # it doesn't matter what order the NFAs are popped off the stack for the '|' operator
             nfa2, nfa1 = nfaStack.pop(), nfaStack.pop()
@@ -153,7 +149,6 @@ def compile(postfix):
             # create a new NFA with the initial and final state and push it to the stack
             newNFA = NFA(initial, final)
             nfaStack.append(newNFA)
-
         else: 
             # else is used for handling all non special symbols
             # create a new initial and final state
@@ -221,6 +216,7 @@ def match(infix, string):
     # check if the accept state is in the currentSet
     return (nfa.final in currentSet)
 
+# COMMENTED TESTS BECAUSE THEY TAKE UP A LOT OF CONSOLE SPACE 
 # # testing that the shunting algorithm works correctly
 # print('Test for the shunting yard function')
 # print(shunt('A*B+C'))
@@ -229,7 +225,7 @@ def match(infix, string):
 # print(shunt('A-B+C'))
 # print(shunt('A|B.C'))
 
-# # tuple is used to store pair values for '*' operator
+# tuple is used to store pair values for '*' operator
 # testTuple = [
 #     ('a*', ''),# pass
 #     ('a*', 'a'),# pass
@@ -304,7 +300,7 @@ def match(infix, string):
 # for exp, res in testTuple: 
 #     print(match(exp, res), exp, res)
 
-
+# Test Infix and String samples provided by the user
 while True:
     infix = (input("Enter an infix regular expression: ")) 
     string = (input("Enter the string you want to match: "))
